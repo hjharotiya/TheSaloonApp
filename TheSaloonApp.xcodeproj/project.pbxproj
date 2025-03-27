@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C51A4BE82D91D948006F7949 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BE72D91D948006F7949 /* FirebaseAnalytics */; };
+		C51A4BEA2D91D948006F7949 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BE92D91D948006F7949 /* FirebaseDatabase */; };
+		C51A4BED2D92939B006F7949 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BEC2D92939B006F7949 /* FirebaseAuth */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		C51A4BCE2D91CBDC006F7949 /* TheSaloonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheSaloonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +29,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51A4BEA2D91D948006F7949 /* FirebaseDatabase in Frameworks */,
+				C51A4BED2D92939B006F7949 /* FirebaseAuth in Frameworks */,
+				C51A4BE82D91D948006F7949 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				C51A4BD02D91CBDC006F7949 /* TheSaloonApp */,
+				C51A4BEB2D92939B006F7949 /* Frameworks */,
 				C51A4BCF2D91CBDC006F7949 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +53,13 @@
 				C51A4BCE2D91CBDC006F7949 /* TheSaloonApp.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		C51A4BEB2D92939B006F7949 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -65,6 +82,9 @@
 			);
 			name = TheSaloonApp;
 			packageProductDependencies = (
+				C51A4BE72D91D948006F7949 /* FirebaseAnalytics */,
+				C51A4BE92D91D948006F7949 /* FirebaseDatabase */,
+				C51A4BEC2D92939B006F7949 /* FirebaseAuth */,
 			);
 			productName = TheSaloonApp;
 			productReference = C51A4BCE2D91CBDC006F7949 /* TheSaloonApp.app */;
@@ -94,6 +114,9 @@
 			);
 			mainGroup = C51A4BC52D91CBDB006F7949;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C51A4BCF2D91CBDC006F7949 /* Products */;
 			projectDirPath = "";
@@ -324,6 +347,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = exactVersion;
+				version = 11.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C51A4BE72D91D948006F7949 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		C51A4BE92D91D948006F7949 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		C51A4BEC2D92939B006F7949 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = C51A4BC62D91CBDB006F7949 /* Project object */;
 }
