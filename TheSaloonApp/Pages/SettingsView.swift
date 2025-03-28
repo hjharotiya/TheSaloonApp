@@ -11,8 +11,19 @@ import SwiftUI
 final class settingsViewModel: ObservableObject {
     
     
-    func Logout() {
+    func Logout() throws {
         AuthenticationManager.shared.SignOut()
+    }
+    
+    func resetPassword() async throws {
+        let authUser = try AuthenticationManager.shared.getAuthenticatedUser()
+        
+        guard let email = authUser.email else {
+            throw URLError(.fileDoesNotExist)
+        }
+        
+        try await AuthenticationManager.shared.resetPassword(email: email)
+        
     }
     
 }
@@ -23,11 +34,32 @@ struct SettingsView: View {
     var body: some View {
         List {
             Button {
-                vm.Logout()
-                showSignInView = true
+                Task {
+                    do {
+                        try await vm.resetPassword()
+                        print("password reset Successfull !!")
+                    }
+                    catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            } label: {
+                Text("Reset Password !!!")
+            }
+            
+            Button {
+                Task {
+                    do {
+                        try vm.Logout()
+                        showSignInView = true
+                    } catch {
+                        print(error.localizedDescription)
+                    }
+                }
             } label: {
                 Text("Log out")
             }
+            
         }.navigationTitle("Settings")
 
     }

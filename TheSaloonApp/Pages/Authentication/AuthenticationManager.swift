@@ -30,9 +30,20 @@ final class AuthenticationManager {
         return AuthenticationModel(user: user)
     }
     
+    @discardableResult
     func createUser (email: String , password: String)async throws-> AuthenticationModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
         return AuthenticationModel(user: authDataResult.user)
+    }
+    
+    @discardableResult
+    func signIn(email: String , password: String) async throws -> AuthenticationModel {
+        let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
+        return AuthenticationModel(user: authDataResult.user)
+    }
+    
+    func resetPassword(email: String) async throws {
+        try await Auth.auth().sendPasswordReset(withEmail: email)
         
     }
     
