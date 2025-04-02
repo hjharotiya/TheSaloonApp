@@ -10,15 +10,30 @@
 		C51A4BE82D91D948006F7949 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BE72D91D948006F7949 /* FirebaseAnalytics */; };
 		C51A4BEA2D91D948006F7949 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BE92D91D948006F7949 /* FirebaseDatabase */; };
 		C51A4BED2D92939B006F7949 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4BEC2D92939B006F7949 /* FirebaseAuth */; };
+		C51A4C0B2D9BD826006F7949 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4C0A2D9BD826006F7949 /* GoogleSignIn */; };
+		C51A4C0D2D9BD826006F7949 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = C51A4C0C2D9BD826006F7949 /* GoogleSignInSwift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C51A4BCE2D91CBDC006F7949 /* TheSaloonApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TheSaloonApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		C51A4C0F2D9BD976006F7949 /* Exceptions for "TheSaloonApp" folder in "TheSaloonApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = C51A4BCD2D91CBDC006F7949 /* TheSaloonApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		C51A4BD02D91CBDC006F7949 /* TheSaloonApp */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				C51A4C0F2D9BD976006F7949 /* Exceptions for "TheSaloonApp" folder in "TheSaloonApp" target */,
+			);
 			path = TheSaloonApp;
 			sourceTree = "<group>";
 		};
@@ -29,7 +44,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51A4C0D2D9BD826006F7949 /* GoogleSignInSwift in Frameworks */,
 				C51A4BEA2D91D948006F7949 /* FirebaseDatabase in Frameworks */,
+				C51A4C0B2D9BD826006F7949 /* GoogleSignIn in Frameworks */,
 				C51A4BED2D92939B006F7949 /* FirebaseAuth in Frameworks */,
 				C51A4BE82D91D948006F7949 /* FirebaseAnalytics in Frameworks */,
 			);
@@ -85,6 +102,8 @@
 				C51A4BE72D91D948006F7949 /* FirebaseAnalytics */,
 				C51A4BE92D91D948006F7949 /* FirebaseDatabase */,
 				C51A4BEC2D92939B006F7949 /* FirebaseAuth */,
+				C51A4C0A2D9BD826006F7949 /* GoogleSignIn */,
+				C51A4C0C2D9BD826006F7949 /* GoogleSignInSwift */,
 			);
 			productName = TheSaloonApp;
 			productReference = C51A4BCE2D91CBDC006F7949 /* TheSaloonApp.app */;
@@ -116,6 +135,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				C51A4C092D9BD826006F7949 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C51A4BCF2D91CBDC006F7949 /* Products */;
@@ -278,6 +298,7 @@
 				DEVELOPMENT_TEAM = X726MHJAPN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TheSaloonApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -307,6 +328,7 @@
 				DEVELOPMENT_TEAM = X726MHJAPN;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TheSaloonApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -357,6 +379,14 @@
 				version = 11.10.0;
 			};
 		};
+		C51A4C092D9BD826006F7949 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -374,6 +404,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C51A4BE62D91D948006F7949 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseAuth;
+		};
+		C51A4C0A2D9BD826006F7949 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51A4C092D9BD826006F7949 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		C51A4C0C2D9BD826006F7949 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C51A4C092D9BD826006F7949 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
