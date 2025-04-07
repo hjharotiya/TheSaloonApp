@@ -11,6 +11,7 @@ import SwiftUI
 final class settingsViewModel: ObservableObject {
     
     @Published var authProviders : [AuthProviderOption] = []
+    @Published var authUser : AuthenticationModel? = nil
     
     func loadAuthProvider() {
         if let providers = try? AuthenticationManager.shared.getProviders() {
@@ -18,8 +19,16 @@ final class settingsViewModel: ObservableObject {
         }
     }
     
+    func loadAuthUser() {
+        self.authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
+    }
+    
     func Logout() throws {
         AuthenticationManager.shared.SignOut()
+    }
+    
+    func deleteUser () async throws {
+        try await AuthenticationManager.shared.DeleteUser()
     }
     
     func resetPassword() async throws {
@@ -38,6 +47,16 @@ final class settingsViewModel: ObservableObject {
         print("Success!!!")
     }
     
+    func linkGoogleAccount() async throws {
+        let helper = SignInGoogleHelper()
+        let tokens = try await helper.signIn()
+        
+        self.authUser = try await AuthenticationManager.shared.linkGoogle(tokens: tokens)
+         
+    }
+    func linkEmailAccount(email:String ,password: String) async throws {
+        self.authUser = try await AuthenticationManager.shared.linkEmail(email: email, password: password)
+    }
 }
 
 struct SettingsView: View {
@@ -58,10 +77,29 @@ struct SettingsView: View {
             } label: {
                 Text("Log out")
             }
+            
+            Button (role: .destructive) {
+                Task {
+                    do {
+                        try await vm.deleteUser()
+                        showSignInView = true
+                    }
+                    catch {
+                        print(error.localizedDescription)
+                    }
+                }
+            } label: {
+                Text("Delete Account")
+            }
+
+            
             if vm.authProviders.contains(.email) {
                 emailSection()
             }
             
+            if  vm.authUser?.isAnonymous == true {
+                anonymousSection(showSignInView: $showSignInView)
+            }
             
            
 
@@ -69,6 +107,7 @@ struct SettingsView: View {
         }.navigationTitle("Settings")
             .onAppear {
                 vm.loadAuthProvider()
+                vm.loadAuthUser()
             }
 
     }
@@ -101,6 +140,54 @@ struct emailSection: View {
             
         } label: {
             Text("Update password")
+        }
+
+    }
+}
+
+struct anonymousSection: View {
+    @StateObject var vm = settingsViewModel()
+    @State var email: String = ""
+    @State var password: String = ""
+    @Binding var showSignInView :Bool
+    
+    var body: some View {
+        TextField("Email...", text: $email)
+            .padding()
+            .background(Color.gray.opacity(0.4))
+            .clipShape(RoundedRectangle(cornerSize:CGSize(width: 10, height: 10) ))
+        SecureField("Password", text: $password)
+            .padding()
+            .background(Color.gray.opacity(0.4))
+            .clipShape(RoundedRectangle(cornerSize:CGSize(width: 10, height: 10) ))
+        
+        Button {
+            Task {
+                do {
+                    try await vm.linkEmailAccount(email: email, password: password)
+                    print("Email Linked!!!")
+                }
+                catch {
+                    print(error)
+                }
+            }
+        } label: {
+            Text("link Email!")
+                .font(.headline)
+                .foregroundStyle(Color.white)
+                .frame(height:55)
+                .frame(maxWidth:.infinity)
+                .background(Color.blue)
+                .clipShape(RoundedRectangle(cornerSize:CGSize(width: 10, height: 10) ))
+        }
+        Button {
+            Task {
+                try await vm.linkGoogleAccount()
+                print("google linked!!!")
+            }
+            
+        } label: {
+            Text("link Google")
         }
 
     }

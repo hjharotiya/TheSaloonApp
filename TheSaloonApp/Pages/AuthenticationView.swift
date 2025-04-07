@@ -45,7 +45,7 @@ struct AuthenticationView: View {
                         showSignInView = false
                     }
                     catch {
-                        print("error")
+                        print(error.localizedDescription)
                     }
                 }
             } label: {

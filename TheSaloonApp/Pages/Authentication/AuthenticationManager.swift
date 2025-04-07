@@ -46,6 +46,14 @@ final class AuthenticationManager {
         }
     }
     
+    func DeleteUser() async throws {
+        guard let user = Auth.auth().currentUser else {
+            throw URLError(.badURL)
+        }
+        
+        try await user.delete()
+    }
+    
     func getProviders() throws -> [AuthProviderOption] {
         guard let providerData = Auth.auth().currentUser?.providerData else {
             throw URLError(.badServerResponse)
@@ -124,10 +132,31 @@ extension AuthenticationManager {
 
 extension AuthenticationManager {
     
+    @discardableResult
     func signInAnonymous () async throws -> AuthenticationModel {
         let authDataResult = try await Auth.auth().signInAnonymously()
         return AuthenticationModel(user: authDataResult.user)
     }
     
+    func linkEmail(email: String , password: String) async throws -> AuthenticationModel{
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        
+        return try await linkcredential(credential: credential)
+    }
+    
+    func linkGoogle(tokens:GoogleSignInResultModel ) async throws -> AuthenticationModel {
+        let credential = GoogleAuthProvider.credential(withIDToken: tokens.idToken, accessToken: tokens.accessToken)
+        
+        return try await linkcredential(credential: credential)
+        
+    }
+    
+    private func linkcredential (credential: AuthCredential) async throws -> AuthenticationModel {
+        guard let user = Auth.auth().currentUser else {
+            throw URLError(.badURL)
+        }
+        let authdataResult = try await user.link(with: credential)
+        return AuthenticationModel(user: authdataResult.user)
+    }
     
 }
