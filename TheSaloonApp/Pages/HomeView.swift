@@ -14,10 +14,24 @@ struct HomeView: View {
     var body: some View {
         ZStack {
             if !showSignInView {
-                NavigationStack {
-                    SettingsView(showSignInView: $showSignInView)
-                }
+                profileView(showSignInView: $showSignInView)
+//                    TabView {
+//                        AvailableTimeSlotsView()
+//                            .tabItem {
+//                                Label("Bookings", systemImage: "calendar")
+//                            }
+//                        StylistView()
+//                            .tabItem {
+//                                Label("Stylist", systemImage: "person.2.fill")
+//                            }
+//                        profileView(showSignInView: $showSignInView)
+//                            .tabItem {
+//                                Label("profile", systemImage: "person.crop.circle")
+//                            }
+//                    }
+                
             }
+            
         }.onAppear {
             let authUser = try? AuthenticationManager.shared.getAuthenticatedUser()
             self.showSignInView = authUser == nil
@@ -33,5 +47,7 @@ struct HomeView: View {
 }
 
 #Preview {
-    HomeView()
+    NavigationStack {
+        HomeView()
+    }
 }

@@ -5,7 +5,7 @@ import Firebase
 import FirebaseAuth
 
 struct AuthenticationModel {
-    let uid: String?
+    let uid: String
     let email: String?
     let photUrl: String?
     let phoneNumber: String?

@@ -19,14 +19,18 @@ final class AuthenticationViewModel: ObservableObject {
         
         let helper = SignInGoogleHelper()
         let tokens = try await helper.signIn()
-        try await AuthenticationManager.shared.signInGoogle(tokens: tokens)
-//        let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: accessToken)
+        let authDataResult = try await AuthenticationManager.shared.signInGoogle(tokens: tokens)
+        let user = DBUser(auth: authDataResult)
+        try await userManager.shared.createUser(user: user)
         
     }
     
     func signInAnonymous() async throws {
+        let authDataResult = try await AuthenticationManager.shared.signInAnonymous()
+//        try await userManager.shared.createNewUser(auth: authDataResult)
         
-        try await AuthenticationManager.shared.signInAnonymous()
+        let user = DBUser(auth: authDataResult)
+        try await userManager.shared.createUser(user: user)
     }
     
 }
@@ -35,6 +39,8 @@ final class AuthenticationViewModel: ObservableObject {
 struct AuthenticationView: View {
     @Binding var showSignInView: Bool
     @StateObject private var vm = AuthenticationViewModel()
+    @StateObject private var alertManager = AlertManager()
+    
     var body: some View {
         VStack {
             
@@ -42,10 +48,12 @@ struct AuthenticationView: View {
                 Task {
                     do {
                         try await vm.signInAnonymous()
+                        alertManager.show(type: .loginSuccess)
                         showSignInView = false
                     }
                     catch {
                         print(error.localizedDescription)
+                        alertManager.show(type: .error(error.localizedDescription))
                     }
                 }
             } label: {
@@ -74,9 +82,11 @@ struct AuthenticationView: View {
                 Task {
                     do{
                         try await vm.signInGoogle()
+                        alertManager.show(type: .loginSuccess)
                         showSignInView = false
                     }
                     catch {
+                        alertManager.show(type: .error(error.localizedDescription))
                         print(error)
                     }
                 }
@@ -84,6 +94,7 @@ struct AuthenticationView: View {
             }
 
         }.navigationTitle("Sign In")
+            .attachAlert(using: alertManager)
     }
 }
 

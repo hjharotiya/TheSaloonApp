@@ -62,13 +62,15 @@ final class settingsViewModel: ObservableObject {
 struct SettingsView: View {
     @StateObject var vm = settingsViewModel()
     @Binding var showSignInView :Bool
-    
+    @StateObject private var alertManager = AlertManager()
+    @State private var showDeleteConfirmation = false
     var body: some View {
         List {
             Button {
                 Task {
                     do {
                         try vm.Logout()
+                        alertManager.show(type: .logoutSuccess)
                         showSignInView = true
                     } catch {
                         print(error.localizedDescription)
@@ -79,15 +81,16 @@ struct SettingsView: View {
             }
             
             Button (role: .destructive) {
-                Task {
-                    do {
-                        try await vm.deleteUser()
-                        showSignInView = true
-                    }
-                    catch {
-                        print(error.localizedDescription)
-                    }
-                }
+//                Task {
+//                    do {
+//                        try await vm.deleteUser()
+//                        showSignInView = true
+//                    }
+//                    catch {
+//                        print(error.localizedDescription)
+//                    }
+//                }
+                showDeleteConfirmation = true
             } label: {
                 Text("Delete Account")
             }
@@ -100,16 +103,29 @@ struct SettingsView: View {
             if  vm.authUser?.isAnonymous == true {
                 anonymousSection(showSignInView: $showSignInView)
             }
-            
-           
-
-            
         }.navigationTitle("Settings")
+            .alert("Delete Account?",
+                   isPresented: $showDeleteConfirmation) {
+                Button("Delete", role: .destructive) {
+                    Task {
+                        do {
+                            try await vm.deleteUser()
+                            alertManager.show(type: .logoutSuccess)
+                            showSignInView = true
+                        } catch {
+                            alertManager.show(type: .error(error.localizedDescription))
+                        }
+                    }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Are you sure you want to delete your account? This action cannot be undone.")
+            }
+            .attachAlert(using: alertManager)
             .onAppear {
                 vm.loadAuthProvider()
                 vm.loadAuthUser()
             }
-
     }
 }
 

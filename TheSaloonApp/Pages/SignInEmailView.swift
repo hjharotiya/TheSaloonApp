@@ -17,9 +17,9 @@ class SignInEmailViewModel: ObservableObject {
             print("No email or password is found !!!")
             return
         }
-                let returnUserData = try await AuthenticationManager.shared.signIn(email: email, password: password)
-                print("Success")
-               
+        let authDataResult = try await AuthenticationManager.shared.signIn(email: email, password: password)
+        let user = DBUser(auth: authDataResult)
+        try await userManager.shared.createUser(user: user)
     }
     
     func signUp() async throws {
@@ -28,12 +28,7 @@ class SignInEmailViewModel: ObservableObject {
             return
         }
         let returnUserData = try await AuthenticationManager.shared.createUser(email: email, password: password)
-                print("Success")
-               
-    }
-
-    
-    
+    }   
 }
 
 
@@ -41,6 +36,8 @@ struct SignInEmailView: View {
     
     @StateObject private var vm = SignInEmailViewModel()
     @Binding var showSignInView :Bool
+    @StateObject private var alertManager = AlertManager()
+    
     var body: some View {
         VStack {
             TextField("Email...", text: $vm.email)
@@ -56,20 +53,23 @@ struct SignInEmailView: View {
                 Task {
                     do {
                         try await vm.signUp()
+                        alertManager.show(type: .accountCreated)
                         showSignInView = false
                         return
                     }
                     catch {
                         print(error)
+                        alertManager.show(type: .error(error.localizedDescription))
                     }
                     
                     do {
                         print("try sign in function")
                         try await vm.signIn()
+                        alertManager.show(type: .loginSuccess)
                         showSignInView = false
                     }
                     catch {
-                        print(error)
+                        alertManager.show(type: .error(error.localizedDescription))
                     }
                 }
             } label: {
@@ -85,6 +85,7 @@ struct SignInEmailView: View {
 
         }.navigationTitle("Sign With Email")
         .padding()
+        .attachAlert(using: alertManager)
     }
 }
 
