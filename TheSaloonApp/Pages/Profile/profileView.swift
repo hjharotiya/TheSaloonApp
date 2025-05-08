@@ -6,8 +6,10 @@ final class ProfileViewModel: ObservableObject {
     @Published private(set) var user: DBUser? = nil
     
     func loadCurrentUSer() async throws {
+        print("using load current user")
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await userManager.shared.getUser(userId: authDataResult.uid)
+        print("********* \(authDataResult.uid) **************")
     }
     
     func togglePremiumStatus() async throws {
@@ -27,7 +29,7 @@ struct profileView: View {
         NavigationStack {
             List {
                 if let user = viewModel.user {
-                    Text("UserId: \(user.userId ?? "no user found")")
+                    Text("UserId: \(user.userId)")
                     
                     if let isAnonymous = user.isAnonymous {
                         Text("is Anonymous: \(isAnonymous.description.capitalized)")
@@ -42,17 +44,23 @@ struct profileView: View {
                         Text("User is premium: \((user.isPremium ?? false).description.capitalized)")
                     }
                 }
-                VStack {
                     NavigationLink {
                         AddServiceView()
                                      }label:{
                        Text("Add New Service")
                 }
+                
+                NavigationLink {
+                    ServicesView()
+                                 }label:{
+                   Text("Add New Service")
+            }
+            }
+        }.onAppear {
+            Task{
+                    try? await viewModel.loadCurrentUSer()
                 }
-            }
-        }.task {
-                try? await viewModel.loadCurrentUSer()
-            }
+        }
         .navigationTitle("Profile")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

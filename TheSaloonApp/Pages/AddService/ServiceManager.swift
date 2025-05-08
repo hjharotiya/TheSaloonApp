@@ -13,7 +13,7 @@ struct Service: Identifiable, Codable {
     var duration: Int // mins
 }
 
-class ServiceViewModel: ObservableObject {
+class AddServiceViewModel: ObservableObject {
     private let db = Firestore.firestore()
     
     func addService(service: Service) async throws {

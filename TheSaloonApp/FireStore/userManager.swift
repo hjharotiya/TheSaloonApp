@@ -6,38 +6,47 @@ import FirebaseFirestoreCombineSwift
 
 struct DBUser: Codable {
     let userId : String
+    let displayName : String?
     let isAnonymous : Bool?
     let email : String?
     let photoUrl : String?
     let phoneNumber: String?
     let DateCreated: Date?
     var isPremium: Bool?
+    var role : String?
     
     init(auth: AuthenticationModel) {
         self.userId = auth.uid
         self.email = auth.email
+        self.displayName = auth.displayName
         self.isAnonymous = auth.isAnonymous
         self.phoneNumber = auth.phoneNumber
         self.photoUrl = auth.photUrl
         self.DateCreated = Date()
         self.isPremium = false
+        self.role = "client"
     }
     
     init( userId : String,
      isAnonymous : Bool?,
+          displayName: String,
     email : String?,
      photoUrl : String?,
     phoneNumber: String?,
      DateCreated: Date?,
-          isPremium: Bool?)
+          isPremium: Bool?,
+          role: String?
+    )
     {
         self.userId = userId
+        self.displayName = displayName
         self.email = email
         self.isAnonymous = isAnonymous
         self.phoneNumber = phoneNumber
         self.photoUrl = photoUrl
         self.DateCreated = Date()
         self.isPremium = isPremium
+        self.role = role
     }
     
 //    func togglePremiumStatus() -> DBUser {
@@ -58,36 +67,41 @@ struct DBUser: Codable {
     
     enum CodingKeys: String,CodingKey {
         case userId = "user_id"
+        case displayName = "display_name"
         case isAnonymous = "is_anonymous"
         case email = "email"
         case photoUrl = "photo_url"
         case phoneNumber = "phone_number"
         case DateCreated = "date_created"
         case isPremium = "is_premium"
+        case role = "role"
     }
     
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.userId = try container.decode(String.self, forKey: .userId)
+        self.displayName = try container.decodeIfPresent(String.self, forKey: .displayName)
         self.isAnonymous = try container.decodeIfPresent(Bool.self, forKey: .isAnonymous)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
         self.phoneNumber = try container.decodeIfPresent(String.self, forKey: .phoneNumber)
         self.DateCreated = try container.decodeIfPresent(Date.self, forKey: .DateCreated)
         self.isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium)
+        self.role = try container.decodeIfPresent(String.self, forKey: .role)
     }
     
     func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.userId, forKey: .userId)
+        try container.encode(self.displayName, forKey: .displayName)
         try container.encodeIfPresent(self.isAnonymous, forKey: .isAnonymous)
         try container.encodeIfPresent(self.email, forKey: .email)
         try container.encodeIfPresent(self.photoUrl, forKey: .photoUrl)
         try container.encodeIfPresent(self.phoneNumber, forKey: .phoneNumber)
         try container.encodeIfPresent(self.DateCreated, forKey: .DateCreated)
         try container.encodeIfPresent(self.isPremium, forKey: .isPremium)
+        try container.encodeIfPresent(self.role, forKey: .role)
     }
-
 }
 
 final class userManager {
@@ -141,7 +155,14 @@ final class userManager {
 //    }
     
     func getUser(userId: String) async throws -> DBUser {
-       return try await userDocuments(userId: userId).getDocument(as: DBUser.self)
+
+         let user = try await userDocuments(userId: userId).getDocument(as: DBUser.self)
+//        else {
+//            print("Error in getting User \(error.localizedDescription)")
+//
+//        }
+        return user
+        
     }
     
 //    func getUser(userId: String) async throws -> DBUser {

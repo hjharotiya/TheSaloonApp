@@ -3,20 +3,26 @@
 import Foundation
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
+import FirebaseFirestoreCombineSwift
 
 struct AuthenticationModel {
     let uid: String
+    let displayName: String?
     let email: String?
     let photUrl: String?
     let phoneNumber: String?
     let isAnonymous: Bool
+    let role: String?
     
     init (user: User) {
         self.uid = user.uid
+        self.displayName = user.displayName
         self.email = user.email
         self.photUrl = user.photoURL?.absoluteString
         self.phoneNumber = user.phoneNumber
         self.isAnonymous = user.isAnonymous
+        self.role = "client"
     }
 }
 
@@ -34,6 +40,7 @@ final class AuthenticationManager {
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse)
         }
+        print(AuthenticationModel(user: user))
         return AuthenticationModel(user: user)
     }
 
@@ -109,6 +116,30 @@ extension AuthenticationManager {
         
         try await user.updateEmail(to: email)
     }
+    
+    func updateDetails(name: String , phoneNumber: String)  {
+        guard let user = Auth.auth().currentUser else {
+//            throw URLError(.badServerResponse)
+            return
+        }
+        let db = Firestore.firestore()
+        let userData: [String: Any] = [
+            "name": name,
+            "phoneNumber": phoneNumber,
+            "email": user.email ?? "",
+            "uid": user.uid,
+            "role": "client" // or "stylist" if needed
+        ]
+        
+        db.collection("users").document(user.uid).setData(userData, merge: true) { error in
+            if let error = error {
+                print("Error in saving user data: \(error.localizedDescription)")
+            }else {
+                print("User data saved successfully")
+            }
+        }
+    }
+   
 }
 
 // MARK: SIGN IN SSO

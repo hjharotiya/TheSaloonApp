@@ -47,6 +47,10 @@ final class settingsViewModel: ObservableObject {
         print("Success!!!")
     }
     
+    func updateDetails(name: String, phoneNumber: String) async throws {
+        try await AuthenticationManager.shared.updateDetails(name: name, phoneNumber: phoneNumber)
+    }
+    
     func linkGoogleAccount() async throws {
         let helper = SignInGoogleHelper()
         let tokens = try await helper.signIn()
@@ -103,6 +107,8 @@ struct SettingsView: View {
             if  vm.authUser?.isAnonymous == true {
                 anonymousSection(showSignInView: $showSignInView)
             }
+            
+                addDetailsSection()
         }.navigationTitle("Settings")
             .alert("Delete Account?",
                    isPresented: $showDeleteConfirmation) {
@@ -125,7 +131,7 @@ struct SettingsView: View {
             .onAppear {
                 vm.loadAuthProvider()
                 vm.loadAuthUser()
-            }
+        }
     }
 }
 
@@ -206,6 +212,51 @@ struct anonymousSection: View {
             Text("link Google")
         }
 
+    }
+}
+
+struct addDetailsSection: View {
+    @State var name : String = ""
+    @State var phoneNumber : String = ""
+    
+    @State private var showAlert = false
+    @State private var alertMessage = ""
+    @StateObject var vm = settingsViewModel()
+    private func addDetails () async {
+        guard !name.isEmpty , !phoneNumber.isEmpty else {
+            alertMessage = "Please fill all the fields"
+            showAlert = true
+            return
+        }
+    }
+    
+    private func showUSer() {
+        print(vm.authUser?.phoneNumber ?? "phone number not found")
+    }
+    private func ClearDetails () {
+        name = ""
+        phoneNumber = ""
+    }
+    var body: some View {
+        if vm.authUser?.phoneNumber == nil {
+            TextField("name", text: $name)
+            TextField("phone number", text: $phoneNumber)
+            
+            Button {
+                Task {
+                    try await vm.updateDetails(name: name, phoneNumber: phoneNumber)
+                    ClearDetails()
+                }
+            } label: {
+                Text("Add Details")
+            }
+        }
+        
+        Button {
+            showUSer()
+        } label: {
+            Text("show user Details")
+        }
     }
 }
 

@@ -3,7 +3,7 @@
 import SwiftUI
 struct AddServiceView: View {
     
-    @StateObject private var vm = ServiceViewModel()
+    @StateObject private var vm = AddServiceViewModel()
     
     @State private var name = ""
     @State private var description = ""
