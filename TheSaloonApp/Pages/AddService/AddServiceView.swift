@@ -23,7 +23,8 @@ struct AddServiceView: View {
         let newService = Service(name: name, description: description, price: priceValue, duration: durationValue)
         
         do {
-            try await vm.addService(service: newService)
+            //            try await vm.addService(service: newService)
+            try await shopsManager.shared.addService(shopId:"34AE02C3-0E02-4D96-B217-DB70C8A265E7", service: newService)
             alertMessage = "Service added successfully!"
             showAlert = true
             clearfields()
@@ -66,8 +67,6 @@ struct AddServiceView: View {
             }
     }
 }
-
-
 
 #Preview {
     NavigationStack {

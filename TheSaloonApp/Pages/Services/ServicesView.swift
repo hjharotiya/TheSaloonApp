@@ -4,6 +4,7 @@ import SwiftUI
 struct ServicesView: View {
     @StateObject private var vm = ServicesViewModel()
     @State private var navigate = false
+    let shop : Shop
     var body: some View {
         NavigationStack {
             VStack {
@@ -37,12 +38,12 @@ struct ServicesView: View {
                             
             }.navigationTitle("Choose Services")
                 .onAppear {
-                    vm.fetchServices()
+                    vm.fetchServices(shopId: shop.id)
                 }
         }
     }
 }
 
 #Preview {
-    ServicesView()
+    ServicesView(shop: Shop(id: "S123", name: "hj", address: "s", ownerId: "s", createdAt: Date()))
 }

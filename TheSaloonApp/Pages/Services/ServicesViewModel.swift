@@ -6,9 +6,11 @@ class ServicesViewModel: ObservableObject {
     @Published var services: [Service] = []
     @Published var selectedServices : [Service] = []
     
+    let db = Firestore.firestore()
     
-    func fetchServices() {
-        Firestore.firestore().collection("services").getDocuments { snapshot , error in
+    func fetchServices(shopId: String) {
+        
+        db.collection("shops").document(shopId).collection("services").getDocuments { snapshot , error in
             guard let documents = snapshot?.documents else {return}
             self.services = documents.compactMap { doc in
                 try? doc.data(as: Service.self)

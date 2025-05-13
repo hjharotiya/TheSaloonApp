@@ -9,7 +9,6 @@ final class ProfileViewModel: ObservableObject {
         print("using load current user")
         let authDataResult = try AuthenticationManager.shared.getAuthenticatedUser()
         self.user = try await userManager.shared.getUser(userId: authDataResult.uid)
-        print("********* \(authDataResult.uid) **************")
     }
     
     func togglePremiumStatus() async throws {
@@ -51,9 +50,14 @@ struct profileView: View {
                 }
                 
                 NavigationLink {
-                    ServicesView()
+                    ShopListView()
                                  }label:{
-                   Text("Add New Service")
+                   Text("View Shops")
+            }
+                NavigationLink {
+                    AddingShop()
+                                 }label:{
+                   Text("View Service")
             }
             }
         }.onAppear {
